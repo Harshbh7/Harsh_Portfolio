@@ -4,24 +4,25 @@ import {
   useMotionValue,
   useTransform,
   useSpring,
-  AnimatePresence, // ✅ 3D-Tilt और Ticker के लिए नए इम्पोर्ट
+  AnimatePresence,
 } from "framer-motion";
 import {
   Button,
   Typography,
   Box,
   Avatar,
-  IconButton, // ✅ नया इम्पोर्ट
+  IconButton,
 } from "@mui/material";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
-import RocketLaunchIcon from "@mui/icons-material/RocketLaunch"; // ✅ नया इम्पोर्ट
-import DownloadIcon from "@mui/icons-material/Download"; // ✅ नया इम्पोर्ट
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import DownloadIcon from "@mui/icons-material/Download";
 import userImage from "../assets/User.png";
+import resumePDF from "../assets/pdf/Harsh_Sharma_College_Updated_ATS_Resume.pdf"; // ✅ Resume import
 
-// मोशन के साथ MUI IconButton को कम्बाइन करना
+// Motion-enabled IconButton
 const MotionIconButton = motion(IconButton);
 
-// ✅ 1. डायनामिक रोल्स के लिए Ticker
+// ✅ Dynamic Roles
 const roles = [
   "Full Stack Developer",
   "AI Enthusiast",
@@ -30,23 +31,20 @@ const roles = [
 ];
 
 const Hero = () => {
-  // --- Ticker State ---
   const [roleIndex, setRoleIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setRoleIndex((prevIndex) => (prevIndex + 1) % roles.length);
-    }, 3000); // हर 3 सेकंड में रोल बदलें
+    }, 3000);
     return () => clearInterval(interval);
   }, []);
 
-  // --- ✅ 2. 3D Parallax Tilt के लिए Hooks ---
+  // 3D Tilt
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-
   const smoothMouseX = useSpring(mouseX, { stiffness: 100, damping: 30 });
   const smoothMouseY = useSpring(mouseY, { stiffness: 100, damping: 30 });
-
   const rotateX_card = useTransform(smoothMouseY, [-0.5, 0.5], [5, -5]);
   const rotateY_card = useTransform(smoothMouseX, [-0.5, 0.5], [-5, 5]);
   const rotateX_img = useTransform(smoothMouseY, [-0.5, 0.5], [10, -10]);
@@ -61,16 +59,11 @@ const Hero = () => {
     mouseY.set(y);
   };
 
-  // --- ✅ 3. Staggered Intro के लिए Variants ---
+  // Animation Variants
   const containerVariants = {
     hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.1, // एक-एक करके 0.1s के गैप में
-      },
-    },
+    visible: { transition: { staggerChildren: 0.1 } },
   };
-
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
@@ -79,19 +72,18 @@ const Hero = () => {
   return (
     <Box
       id="home"
-      onMouseMove={handleMouseMove} // ✅ माउस मूवमेंट को सुनें
+      onMouseMove={handleMouseMove}
       sx={{
         position: "relative",
         minHeight: "100vh",
         display: "flex",
-        flexDirection: { xs: "column-reverse", md: "row" }, // ✅ बदला हुआ क्रम
+        flexDirection: { xs: "column-reverse", md: "row" },
         justifyContent: "center",
         alignItems: "center",
         gap: 6,
         color: "white",
         padding: "60px 20px",
-        perspective: "1500px", // ✅ 3D इफ़ेक्ट के लिए यह ज़रूरी है
-        // ✅ आपका ओरिजिनल बैकग्राउंड (कोई बदलाव नहीं)
+        perspective: "1500px",
         backgroundImage: `
           linear-gradient(to bottom right, rgba(10,10,30,0.85), rgba(10,10,40,0.9)),
           url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1950&q=80')
@@ -101,7 +93,7 @@ const Hero = () => {
         overflow: "hidden",
       }}
     >
-      {/* ✅ आपका ओरिजिनल ग्लोइंग एनीमेशन (कोई बदलाव नहीं) */}
+      {/* Background Animation */}
       <motion.div
         animate={{
           background: [
@@ -121,7 +113,7 @@ const Hero = () => {
         }}
       />
 
-      {/* --- 4. इमेज (3D Tilt के साथ) --- */}
+      {/* Profile Image */}
       <motion.div
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
@@ -131,8 +123,8 @@ const Hero = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          rotateX: rotateX_img, // ✅ 3D Tilt लागू किया
-          rotateY: rotateY_img, // ✅ 3D Tilt लागू किया
+          rotateX: rotateX_img,
+          rotateY: rotateY_img,
         }}
       >
         <motion.div
@@ -156,14 +148,14 @@ const Hero = () => {
             sx={{
               width: { xs: 180, md: 250 },
               height: { xs: 180, md: 250 },
-              border: "3px solid rgba(10,10,30,0.8)", // डार्क बॉर्डर
+              border: "3px solid rgba(10,10,30,0.8)",
               boxShadow: "0 0 20px rgba(0,0,0,0.4)",
             }}
           />
         </motion.div>
       </motion.div>
 
-      {/* --- 5. कंटेंट कार्ड (Staggered Intro के साथ) --- */}
+      {/* Content Section */}
       <motion.div
         style={{
           zIndex: 2,
@@ -173,11 +165,11 @@ const Hero = () => {
           backdropFilter: "blur(12px)",
           background: "rgba(255,255,255,0.08)",
           boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
-          textAlign: { xs: "center", md: "left" }, // ✅ प्रोफेशनल अलाइनमेंट
-          rotateX: rotateX_card, // ✅ 3D Tilt लागू किया
-          rotateY: rotateY_card, // ✅ 3D Tilt लागू किया
+          textAlign: { xs: "center", md: "left" },
+          rotateX: rotateX_card,
+          rotateY: rotateY_card,
         }}
-        variants={containerVariants} // ✅ Stagger
+        variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
@@ -197,13 +189,12 @@ const Hero = () => {
 
         <motion.div variants={itemVariants}>
           <Typography
-            variant="h2" // ✅ थोड़ा बड़ा
+            variant="h2"
             sx={{
               fontWeight: "bold",
               mb: 2,
               textShadow: "0 3px 12px rgba(0,0,0,0.5)",
               fontSize: { xs: "2.5rem", sm: "3.5rem" },
-              // ✅ हैडर से मिलता-जुलता शाइन एनीमेशन
               "@keyframes shine": {
                 "0%": { backgroundPosition: "0% 50%" },
                 "100%": { backgroundPosition: "300% 50%" },
@@ -224,16 +215,16 @@ const Hero = () => {
           </Typography>
         </motion.div>
 
-        {/* --- ✅ 6. नया Role Ticker --- */}
+        {/* Role Ticker */}
         <motion.div variants={itemVariants}>
           <Typography
-            variant="h5" // थोड़ा बड़ा फ़ॉन्ट
+            variant="h5"
             sx={{
               mb: 4,
               fontFamily: "'Courier New', monospace",
-              color: "#61dafb", // एक्सेंट कलर
-              height: "1.2em", // जगह फिक्स रखने के लिए
-              minWidth: { md: "24ch" }, // बाएं अलाइनमेंट को स्थिर रखने के लिए
+              color: "#61dafb",
+              height: "1.2em",
+              minWidth: { md: "24ch" },
             }}
           >
             <AnimatePresence mode="wait">
@@ -251,7 +242,7 @@ const Hero = () => {
           </Typography>
         </motion.div>
 
-        {/* --- 7. बेहतर बटन --- */}
+        {/* Buttons */}
         <motion.div variants={itemVariants}>
           <Box
             sx={{
@@ -262,10 +253,11 @@ const Hero = () => {
               gap: 2,
             }}
           >
+            {/* My Projects */}
             <motion.div whileHover={{ scale: 1.05 }}>
               <Button
                 variant="contained"
-                startIcon={<RocketLaunchIcon />} // ✅ आइकॉन
+                startIcon={<RocketLaunchIcon />}
                 sx={{
                   px: 3,
                   py: 1.2,
@@ -287,10 +279,12 @@ const Hero = () => {
                 My Projects
               </Button>
             </motion.div>
+
+            {/* Resume Button */}
             <motion.div whileHover={{ scale: 1.05 }}>
               <Button
                 variant="outlined"
-                startIcon={<DownloadIcon />} // ✅ आइकॉन
+                startIcon={<DownloadIcon />}
                 sx={{
                   px: 3,
                   py: 1.2,
@@ -304,7 +298,9 @@ const Hero = () => {
                     backgroundColor: "rgba(255,255,255,0.1)",
                   },
                 }}
-                href="/Harsh_Sharma_Resume.pdf" // सुनिश्चित करें कि यह पाथ 'public' फोल्डर में सही है
+                href={resumePDF}
+                target="_blank"
+                rel="noopener noreferrer"
                 download
               >
                 My Resume
@@ -313,7 +309,7 @@ const Hero = () => {
           </Box>
         </motion.div>
 
-        {/* --- 8. बेहतर सोशल आइकन्स --- */}
+        {/* Social Links */}
         <motion.div variants={itemVariants}>
           <Box
             sx={{
